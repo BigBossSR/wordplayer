@@ -1,0 +1,9 @@
+{
+  "name": "word-player",
+  "version": "0.0.0",
+  "description": "WordPlayer",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  }
+}
