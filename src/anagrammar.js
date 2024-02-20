@@ -1,127 +1,89 @@
 import { rawInput, modifiedInput, letterBank, letterBankLabel, tableContent } from './elements.js';
-import { areTermsEqual, getAlphanumerics } from './util.js';
+import { areTermsEqual, getAlphanumerics, shuffleArray } from './util.js';
+
+const DEFAULT_INPUTS = [
+  { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
+  { raw: "Spiro Agnew", modified: "Grow a penis"}
+];
 
 const savedEntries = {};
 
+
 const Anagrammar = {
   init: () => {
+    // track the user-created value so we can reference it as needed 
+    let currentAnagram = '';
 
-    rawInput.value = "Rearrange me!"
+    // default setup: example anagram input
+    const demoValues = DEFAULT_INPUTS[Math.floor(Math.random() * DEFAULT_INPUTS.length)];
+    rawInput.value = demoValues.raw;
     letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
 
+    // set listener for raw input
     rawInput.addEventListener('change', evt => {
       letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
+      currentAnagram = '';
+      // handleInput is smart enough to refresh the anagram from zero to reflect the new source input
+      handleInput();
     });
 
-    /* NEW IDEA
-    track CurrentValue in a variable
-    on input, compare New Value to Current Value to find: chars added / chars removed
-      both can exist, if an overwrite
-    for each char removed:
-      if it is alphanumeric, add it to end of letterbank
-
-    for each char added
-      if it is in letterbank, remove from letterbank
-      if not, remove from New Value
-
-    Assing modified leterbank
-    Assign New Value to input
-    Assign New Value to CurrentValue
-
+    /** 
+     * The Core Function: compare the anagrammed value to the source data and letterbank
+     * This creates three arrays of characters from the stored currentAnagram, the latest user input, and the 
+     * available letter bank. These arrays are used to determine added/deleted characters, enforce validity,
+     * and update the stored values as appropriate.
     */
-
-    let currentAnagram = '';
-    // todo: decide if i like the array approach
-    function handleInput () {
-      /*let sourceText = getAlphanumerics(rawInput.value).toUpperCase();
-      let newValue = modifiedInput.value;
-      let unusedLetters = letterBank.innerText;
-      let oldValue = currentAnagram;
-
-      let charactersAdded = '';
-      let charactersRemoved = '';*/ 
+    function handleInput (/*evt*/) {
       let newValue = modifiedInput.value.split('');
       let unusedLetters = letterBank.innerText.split('');
       let oldValue = currentAnagram.toUpperCase().split('');
 
       let charactersAdded = [];
-      let charactersRemoved = [];
+
       newValue.forEach(char => {
-        const existingIndex = oldValue.indexOf(char.toUpperCase()); 
-        if (existingIndex === -1) {
-          //charactersAdded += char;
-          charactersAdded.push(char);
-        } else {
-          // if character exists, remove so we don't match repeatedly
-          // oldValue = oldValue.slice(0, existingIndex) + oldValue.slice(existingIndex + 1)
-          oldValue.splice(existingIndex, 1);
+        if (/[a-zA-Z0-9]/.test(char)) {
+          const existingIndex = oldValue.indexOf(char.toUpperCase());
+          // if alphanumeric and not in currentAnagram, it is an added character
+          if (existingIndex === -1) {
+            charactersAdded.push(char);
+          } else {
+            // remove matches from the old value inventory
+            oldValue.splice(existingIndex, 1);
+          }
         }
       });
 
       // any oldValue characters not in newValue must be deletions
-      charactersRemoved = oldValue;
-
-      charactersRemoved.forEach(removed => {
+      oldValue.forEach(removed => {
         if (/[a-zA-Z0-9]/.test(removed)) {
-          // unusedLetters += removed;
           unusedLetters.push(removed.toUpperCase());
         }
       });
 
-      charactersAdded.forEach((added) => {
-        const existingIndex = unusedLetters.indexOf(added.toUpperCase());
-        if (existingIndex !== -1) {
-          // unusedLetters = unusedLetters.slice(0, existingIndex) + unusedLetters.slice(existingIndex + 1);
-          unusedLetters.splice(existingIndex, 1);
-        } else if (/[a-zA-Z0-9]/.test(added)) {
-          const newIndex = newValue.indexOf(added);
-          // newValue = newValue.slice(0, newIndex) + newValue.slice(newIndex + 1);
-          newValue.splice(newIndex, 1);
-        }
-      });
+      // If there are available letters from deletion of letter bank, proceed
+      // Second condition covers an edge case to allow special characters
+      if (unusedLetters.length || !charactersAdded.length) {
+        charactersAdded.forEach((added) => {
+          const existingIndex = unusedLetters.indexOf(added.toUpperCase());
+          if (existingIndex !== -1) {
+            unusedLetters.splice(existingIndex, 1);
+          } else {
+            const indexToRemove = newValue.indexOf(added);
+            newValue.splice(indexToRemove, 1);
+          }
+        });
 
-      letterBank.innerText = unusedLetters.join('');
-      modifiedInput.value = currentAnagram = newValue.join('');
+        letterBank.innerText = unusedLetters.join('');
+        modifiedInput.value = currentAnagram = newValue.join('');
+      } else {
+        // if no available characters, replace the latest input with the stored anagram
+        modifiedInput.value = currentAnagram;
+      }
     }
 
 
     modifiedInput.addEventListener('input', handleInput);
-   /* modifiedInput.addEventListener('input', evt => {
-      let sourceText = getAlphanumerics(rawInput.value).toUpperCase();
-      let modifiedText = modifiedInput.value;
-      let unusedLetters = letterBank.innerText;
-
-      let processed = '';
-
-      for (let i = 0; i < modifiedText.length; i++) {
-        const modifiedChar = modifiedText[i];
-        // if alphanumeric, be sure it is valid input
-        if (/[a-zA-Z0-9]/.test(modifiedChar)) {
-          // find index in raw sourcetext
-          const sourceIndex = sourceText.indexOf(modifiedChar.toUpperCase());
-          // if not a valid character, abort
-          if (sourceIndex === -1) {
-            break;
-          } else {
-            // if valid, splice the index from sourceText
-            sourceText = sourceText.slice(0, sourceIndex) + sourceText.slice(sourceIndex + 1)
-          }
-        }
-        processed += modifiedChar;
-      }
-      // assign sourceText to rawInput and modifiedText to modifiedInput
-
-      modifiedInput.value = processed;
-
-      // now, mutate the unusedLetters? SO that the word bank is refreshed?
-      // iterate unusedLetters from back, to mutate
-      // if a letter exists in sourceText, remove from sourceText
-      // if it does not exist in sourceText, remove from this array
-      // once we are done, any remaining characters from source text are deletions that should be added in to end, preferably as they are...
-
-      letterBank.innerText = sourceText;
-    });*/
-
+   
     modifiedInput.addEventListener('change', evt => {
       if (letterBank.innerText.length === 0) {
         const key = rawInput.value.trim().toUpperCase(); // consider using alphanumeric here
@@ -168,17 +130,14 @@ const Anagrammar = {
     letterBankLabel.addEventListener('click', () => {
       let letterArray = letterBank.innerText.split('');
       
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-      }
-
       shuffleArray(letterArray);
 
       letterBank.innerText = letterArray.join('');
     });
+
+    // final setup: populate the demo anagram and manually trigger input handler 
+    modifiedInput.value = demoValues.modified;
+    handleInput();
   }
 };
 

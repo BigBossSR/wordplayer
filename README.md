@@ -4,7 +4,10 @@ Navigate to localhost:8080
 
 TODOS:
 * use regexp to find index checking only alphanumeric
-* when modifying sourceText: update letterBank with new characters; strip deleted characters from modifiedInput
+* add explicit save/submit interaction
+* review save/submit code based on latest input handling practices
+* ~~when modifying sourceText: update letterBank with new characters; strip deleted characters from modifiedInput~~
+* ~~do not populate letterbank with duplicates when deleting after letterbank is updated by new source term (probably fix with above issue)~~
 
 BUGFIX:
-* disallow a letter that's exhausted from letterbank
+* ~~disallow a letter that's exhausted from letterbank~~
