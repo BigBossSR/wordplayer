@@ -1,4 +1,4 @@
-import { rawInput, modifiedInput, letterBank, letterBankLabel, tableContent } from './elements.js';
+import { rawInput, modifiedInput, letterBank, letterBankLabel, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
 import { areTermsEqual, getAlphanumerics, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
@@ -19,13 +19,17 @@ const Anagrammar = {
     rawInput.value = demoValues.raw;
     letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
 
-    // set listener for raw input
-    rawInput.addEventListener('change', evt => {
+
+    /**
+     * Identify alphanumeric values of original term, and update the letterbank.
+     * This clears the currentAnagram and triggers handleModifiedInput to respond to changed values.
+    */
+    function handleRawInput() {
       letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
       currentAnagram = '';
-      // handleInput is smart enough to refresh the anagram from zero to reflect the new source input
-      handleInput();
-    });
+      // handleModifiedInput is smart enough to refresh the anagram from zero to reflect the new source input
+      handleModifiedInput();
+    }
 
     /** 
      * The Core Function: compare the anagrammed value to the source data and letterbank
@@ -33,7 +37,7 @@ const Anagrammar = {
      * available letter bank. These arrays are used to determine added/deleted characters, enforce validity,
      * and update the stored values as appropriate.
     */
-    function handleInput (/*evt*/) {
+    function handleModifiedInput(/*evt*/) {
       let newValue = modifiedInput.value.split('');
       let unusedLetters = letterBank.innerText.split('');
       let oldValue = currentAnagram.toUpperCase().split('');
@@ -81,10 +85,22 @@ const Anagrammar = {
       }
     }
 
+    /**
+     * Randomly rearrange letterBank on demand
+    */
+    function shuffleLetterBank() {
+      let letterArray = letterBank.innerText.split('');
+      
+      shuffleArray(letterArray);
 
-    modifiedInput.addEventListener('input', handleInput);
-   
-    modifiedInput.addEventListener('change', evt => {
+      letterBank.innerText = letterArray.join('');
+    }
+
+    /**
+     * Populate the table with unique anagrams namespaced by raw input.
+     * White space is trimmed from beginning and end, but internal spaces and punctuation are considered unique.
+    */
+    function storeAnagram() {
       if (letterBank.innerText.length === 0) {
         const key = rawInput.value.trim().toUpperCase(); // consider using alphanumeric here
         const currentValue = modifiedInput.value.trim();
@@ -123,21 +139,35 @@ const Anagrammar = {
           const newEntryText = document.createTextNode(currentValue);
           newEntryTD.appendChild(newEntryText)
           listElement.appendChild(newEntryTD);
+
+          modifiedInput.value = '';
+          currentAnagram = '';
+          handleModifiedInput();
+          shuffleLetterBank();
+          modifiedInput.focus();
         }
       }
+    }
+
+    // set event listeners
+    rawInput.addEventListener('change', handleRawInput);
+
+    clearRawButton.addEventListener('click', () => {
+      rawInput.value = '';
+      handleRawInput();
+      rawInput.focus();
     });
 
-    letterBankLabel.addEventListener('click', () => {
-      let letterArray = letterBank.innerText.split('');
-      
-      shuffleArray(letterArray);
+    modifiedInput.addEventListener('input', handleModifiedInput);
 
-      letterBank.innerText = letterArray.join('');
-    });
+    storeModifiedButton.addEventListener('click', storeAnagram);
+
+    letterBankLabel.addEventListener('click', shuffleLetterBank);
 
     // final setup: populate the demo anagram and manually trigger input handler 
     modifiedInput.value = demoValues.modified;
-    handleInput();
+    handleModifiedInput();
+    modifiedInput.focus();
   }
 };
 
