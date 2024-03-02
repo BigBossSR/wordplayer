@@ -12,3 +12,9 @@ export const shuffleArray = array => {
       [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
+export const setCookie = (appKey, data) => {
+  const saved = JSON.parse(document.cookie);
+  saved[appKey] = data;
+  document.cookie = JSON.stringify(saved);
+}

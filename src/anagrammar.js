@@ -1,5 +1,5 @@
 import { rawInput, modifiedInput, letterBank, letterBankLabel, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
-import { areTermsEqual, getAlphanumerics, shuffleArray } from './util.js';
+import { areTermsEqual, getAlphanumerics, setCookie, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
   { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
@@ -8,6 +8,7 @@ const DEFAULT_INPUTS = [
 
 const savedEntries = {};
 
+const APP_KEY = 'ANAGRAMMAR';
 
 const Anagrammar = {
   init: () => {
@@ -26,6 +27,7 @@ const Anagrammar = {
     */
     function handleRawInput() {
       letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
+      shuffleLetterBank();
       currentAnagram = '';
       // handleModifiedInput is smart enough to refresh the anagram from zero to reflect the new source input
       handleModifiedInput();
@@ -124,29 +126,54 @@ const Anagrammar = {
         if (isInputUnique) {
           let listElement = tableContent.querySelector("[id='" + listID + "'");
           if (!listElement) {
-            listElement = document.createElement('tr');
-            listElement.setAttribute('id', listID);
-
-            const rowHeaderElement = document.createElement('td');
-            rowHeaderElement.classList.add('row-header');
-            const headerText = document.createTextNode(key);
-            rowHeaderElement.appendChild(headerText);
-            listElement.appendChild(rowHeaderElement);
-            tableContent.appendChild(listElement);
+            createRow(key, [currentValue]);
+          } else {
+            createTableCell(currentValue, listElement);
           }
 
-          const newEntryTD = document.createElement('td');
-          const newEntryText = document.createTextNode(currentValue);
-          newEntryTD.appendChild(newEntryText)
-          listElement.appendChild(newEntryTD);
 
           modifiedInput.value = '';
-          currentAnagram = '';
+          //currentAnagram = '';
           handleModifiedInput();
           shuffleLetterBank();
+          handleRawInput();
           modifiedInput.focus();
+
+          setCookie(APP_KEY, savedEntries);
         }
       }
+    }
+
+    // todo: I don't know if I want these components here.
+    function createRow(title, data) {
+      const listID = title.replaceAll(/\s/g, '-');
+      const listElement = document.createElement('tr');
+      listElement.setAttribute('id', listID);
+
+      const rowHeaderElement = document.createElement('td');
+      rowHeaderElement.classList.add('row-header');
+      const headerText = document.createTextNode(title);
+      rowHeaderElement.appendChild(headerText);
+      rowHeaderElement.addEventListener('click', () => {
+        rawInput.value = title;
+        modifiedInput.value = '';
+        handleRawInput();
+      });
+
+
+      listElement.appendChild(rowHeaderElement);
+      tableContent.appendChild(listElement);
+
+      if(Array.isArray(data)) {
+        data.forEach(term => createTableCell(term, listElement));
+      }
+    }
+
+    function createTableCell(term, rowElement) {
+      const newEntryTD = document.createElement('td');
+      const newEntryText = document.createTextNode(term);
+      newEntryTD.appendChild(newEntryText);
+      rowElement.appendChild(newEntryTD);
     }
 
     // set event listeners
@@ -163,6 +190,16 @@ const Anagrammar = {
     storeModifiedButton.addEventListener('click', storeAnagram);
 
     letterBankLabel.addEventListener('click', shuffleLetterBank);
+
+    if (document.cookie.length) {
+      const sessionData = JSON.parse(document.cookie)[APP_KEY];
+      if (sessionData) {
+        Object.entries(sessionData).forEach(([key, data]) => {
+          savedEntries[key] = data;
+          createRow(key, data);
+        })
+      }
+    }
 
     // final setup: populate the demo anagram and manually trigger input handler 
     modifiedInput.value = demoValues.modified;
