@@ -1,17 +1,66 @@
-import { rawInput, modifiedInput, letterBank, letterBankLabel, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
+import { rawInput, modifiedInput, letterBank, letterBankButton, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
 import { areTermsEqual, getAlphanumerics, setCookie, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
   { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
-  { raw: "Spiro Agnew", modified: "Grow a penis"}
+  { raw: "Spiro Agnew", modified: "Grow a penis" },
+  { raw: "Kanye West", modified: "Sweaty Ken" },
+  { raw: "Leonardo DiCaprio", modified: "Periodic Anal Odor" },
+  { raw: "Justin Timberlake", modified: "I’m a Jerk, But Listen" },
+  { raw: "Kim Kardashian", modified: "His Kink, a Drama" },
+  { raw: "Beyoncé Knowles", modified: "Obscenely Woken" },
+  { raw: "Kevin Federline", modified: "Evil Knee Finder" },
+  { raw: "Amy Poehler", modified: "My Pale Hero" },
+  { raw: "John Mayer", modified: "Enjoy Harm" },
+  { raw: "Emma Watson", modified: "Steam Woman" },
+  { raw: "Matthew McConaughey", modified: "A ‘Catch Them Women’ Guy" },
+  { raw: "Ryan Gosling", modified: "Sly Groaning" },
+  { raw: "Bill Gates", modified: "Get Ill Abs" },
+  { raw: "Jennifer Aniston", modified: "Fine in Torn Jeans"},
+  { raw: "Tom Hiddleston", modified: "Odd Silent Moth" },
+  { raw: "Britney Spears", modified: "Presbyterians" },
+  { raw: "Chad Kroeger", modified: "Orchard Geek" },
+  { raw: "Lil Wayne", modified: "Wine Ally" },
+  { raw: "Neil Young", modified: "Online Guy" },
+  { raw: "Eric Clapton", modified: "Narcoleptic" },
+  { raw: "Clint Eastwood", modified: "Old West Action" }
 ];
 
 const savedEntries = {};
 
 const APP_KEY = 'ANAGRAMMAR';
 
+function applyStyles() {
+  rawInput.classList.add('classic-input');
+  modifiedInput.classList.add('classic-input');
+  clearRawButton.classList.add('classic-input', 'classic-button');
+  letterBankButton.classList.add('classic-input', 'classic-button');
+  storeModifiedButton.classList.add('classic-input', 'classic-button');
+}
+
 const Anagrammar = {
+  handleModifiedInput: () => {
+    let newValue = modifiedInput.value;
+    let oldValue = currentAnagram;
+
+    let oldValueIterator = 0;
+    let newValueIterator = 0;
+
+    const charactersAdded = [];
+    const charactersRemoved = [];
+
+    while (oldValueIterator < oldValue.length && newValueIterator < newValue.length) {
+      
+      oldValueIterator++;
+      newValueIterator++;
+    }
+    // find the index of the change
+    // determine a delete or addition
+
+  },
+
   init: () => {
+    applyStyles();
     // track the user-created value so we can reference it as needed 
     let currentAnagram = '';
 
@@ -74,7 +123,10 @@ const Anagrammar = {
           if (existingIndex !== -1) {
             unusedLetters.splice(existingIndex, 1);
           } else {
-            const indexToRemove = newValue.indexOf(added);
+             // Get the cursor position in the input field
+            const cursorIndex = modifiedInput.selectionStart;
+            // Find the index of the character to remove based on the cursor position
+            const indexToRemove = newValue.lastIndexOf(added, cursorIndex);
             newValue.splice(indexToRemove, 1);
           }
         });
@@ -158,6 +210,7 @@ const Anagrammar = {
         rawInput.value = title;
         modifiedInput.value = '';
         handleRawInput();
+        modifiedInput.focus();
       });
 
 
@@ -178,6 +231,15 @@ const Anagrammar = {
 
     // set event listeners
     rawInput.addEventListener('change', handleRawInput);
+    rawInput.addEventListener('beforeinput', () => {
+      const selectedText = window.getSelection().toString();
+      // if the whole raw input is replaced, assume user wants to clear anagram
+      if (selectedText === rawInput.value) {
+        letterBank.innerText = '';
+        modifiedInput.value = '';
+        currentAnagram = '';
+      }
+    });
 
     clearRawButton.addEventListener('click', () => {
       rawInput.value = '';
@@ -189,7 +251,7 @@ const Anagrammar = {
 
     storeModifiedButton.addEventListener('click', storeAnagram);
 
-    letterBankLabel.addEventListener('click', shuffleLetterBank);
+    letterBankButton.addEventListener('click', shuffleLetterBank);
 
     if (document.cookie.length) {
       const sessionData = JSON.parse(document.cookie)[APP_KEY];

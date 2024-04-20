@@ -3,7 +3,7 @@ export const areTermsEqual = (str1, str2) => {
 }
 
 export const getAlphanumerics = str => {
-  return str ? str.match(/[a-zA-Z]+/g).join('') : '';
+  return str ? removeAccents(str).match(/[a-zA-Z]+/g).join('') : '';
 }
 
 export const shuffleArray = array => {
@@ -14,7 +14,10 @@ export const shuffleArray = array => {
 }
 
 export const setCookie = (appKey, data) => {
-  const saved = JSON.parse(document.cookie);
+  const saved = document.cookie ? JSON.parse(document.cookie) : {};
   saved[appKey] = data;
   document.cookie = JSON.stringify(saved);
 }
+
+export const removeAccents = str =>
+  str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
