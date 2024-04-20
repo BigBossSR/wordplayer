@@ -5,20 +5,55 @@
     <meta charset="utf-8" />
     <title></title>
     <style>
+        @font-face {
+            font-family: Chicago;
+            src: url('./assets/Krungthep.ttf');
+        }
         body {
-            background-color: antiquewhite;
+            background-color: white;
+            font-family: Chicago;
+        }
+        .classic-button {
+            border-radius: 3px;
+            background-color: white;
+        }
+        .classic-button:focus {
+            background-color: black;
+            color: white;
+            border-color: white;
+        }
+        .classic-input {
+            outline: 3px solid black;
+            border: 1px solid black;
+            outline-offset: 2px;
+            font-family: Chicago;
+            margin: 6px;
         }
         .input-row {
             display: flex;
             flex-direction: row;
+            align-items: stretch;
         }
         .input-column {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
+        }
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column; /* Stack columns on smaller screens */
+            }
+
+            .input-column {
+                width: 100%; /* Ensure columns fill the full width */
+            }
         }
         #letter-bank-column {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items along the cross axis */
+            justify-content: space-between; /* Distribute items evenly along the main axis */
         }
         #letter-bank-label {
             cursor: pointer;
@@ -40,11 +75,12 @@
         <div class="input-column">
             <h4 id="raw-text-label">Enter term to anagram...</h4>
             <textarea id="raw-text-input"></textarea>
-            <button tabindex="-1" id="clear-raw-text-button">Clear</button>
+            <button tabindex="0" id="clear-raw-text-button">Clear</button>
         </div>
         <div class="input-column" id='letter-bank-column'>
-            <h4 id="letter-bank-label" title="Shuffle">🔄</h4>
+            <h4 id="letter-bank-label"></h4>
             <span id="letter-bank"></span>
+            <button tabindex="0" id="letter-bank-button">Shuffle</button>
         </div>
         <div class="input-column">
             <h4 id="modified-text-label">Now anagram it!</h4>
