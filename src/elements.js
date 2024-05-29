@@ -7,3 +7,4 @@ export const tableContent = document.getElementById('selection-table-body');
 export const letterBankButton = document.getElementById('letter-bank-button');
 export const storeModifiedButton = document.getElementById('store-modified-text-button');
 export const clearRawButton = document.getElementById('clear-raw-text-button');
+export const listContainer = document.getElementById('list-container');

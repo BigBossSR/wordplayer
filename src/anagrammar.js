@@ -1,4 +1,4 @@
-import { rawInput, modifiedInput, letterBank, letterBankButton, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
+import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
 import { areTermsEqual, getAlphanumerics, setCookie, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
@@ -26,7 +26,7 @@ const DEFAULT_INPUTS = [
   { raw: "Clint Eastwood", modified: "Old West Action" }
 ];
 
-const savedEntries = {};
+// const savedEntries = {};
 
 const APP_KEY = 'ANAGRAMMAR';
 
@@ -39,7 +39,8 @@ function applyStyles() {
 }
 
 const Anagrammar = {
-  handleModifiedInput: () => {
+  // todo: in-progress refactor to simplify and implement class method
+  /*handleModifiedInput: () => {
     let newValue = modifiedInput.value;
     let oldValue = currentAnagram;
 
@@ -57,7 +58,7 @@ const Anagrammar = {
     // find the index of the change
     // determine a delete or addition
 
-  },
+  },*/
 
   init: () => {
     applyStyles();
@@ -69,6 +70,33 @@ const Anagrammar = {
     rawInput.value = demoValues.raw;
     letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
 
+    /** Event Handlers */
+    function listHeaderClick({detail}) {
+      rawInput.value = detail.term;
+      modifiedInput.value = '';
+      handleRawInput();
+      modifiedInput.focus();
+    }
+
+    function itemDeleted({ detail }) {
+      const { id, data } = detail;
+      const sessionData = JSON.parse(document.cookie)[APP_KEY] || {};
+      if (data.length) {
+        sessionData[id] = data;
+      } else {
+        delete sessionData[id];
+      }
+      setCookie(APP_KEY, sessionData);
+    }
+
+    function editItem({detail}) {
+      const { source, anagram } = detail;
+      rawInput.value = source;
+      handleRawInput();
+      modifiedInput.value = anagram;
+      handleModifiedInput();
+      modifiedInput.focus();
+    }
 
     /**
      * Identify alphanumeric values of original term, and update the letterbank.
@@ -155,91 +183,49 @@ const Anagrammar = {
      * White space is trimmed from beginning and end, but internal spaces and punctuation are considered unique.
     */
     function storeAnagram() {
-      if (letterBank.innerText.length === 0) {
-        const key = rawInput.value.trim().toUpperCase(); // consider using alphanumeric here
+    if (letterBank.innerText.length === 0) {
+        const key = rawInput.value.trim().toUpperCase();
         const currentValue = modifiedInput.value.trim();
-        let isInputUnique = false;
 
-        if (!savedEntries.hasOwnProperty(key)) {
-          savedEntries[key] = [];
-          savedEntries[key].id = key.replaceAll(/\s/g, '-');
+        let isInputUnique = true; // assume this is a new term until we find it
+
+        // Find or create the list element
+        let listElement = listContainer.querySelector("[id='" + key.replaceAll(/\s/g, '-') + "'");
+        if (!listElement) {
+            listElement = Object.assign(document.createElement('stored-list'), {
+                title: key,
+                data: [currentValue]
+            });
+            listElement.addEventListener('listHeaderClick', listHeaderClick); 
+
+            listElement.addEventListener('itemDeleted', itemDeleted);
+            listElement.addEventListener('editItem', editItem);
+
+            document.getElementById('list-container').appendChild(listElement);
+        } else {
+            isInputUnique = !listElement.data.includes(currentValue); // Check if value is unique
+            if (isInputUnique) {
+                listElement.addListItem(currentValue);
+            }
         }
 
-        const currentList = savedEntries[key];
-        const listID = currentList.id;
-
-        if (currentList.findIndex(existing => areTermsEqual(currentValue, existing)) < 0 &&
-          !areTermsEqual(key, currentValue)) {
-          currentList.push(currentValue);
-          isInputUnique = true;
-        }
-
-        // todo: what dictates the table? a rerender each time? or shall we dictate this is new value?
         if (isInputUnique) {
-          let listElement = tableContent.querySelector("[id='" + listID + "'");
-          if (!listElement) {
-            createRow(key, [currentValue]);
-          } else {
-            createTableCell(currentValue, listElement);
-          }
+            modifiedInput.value = '';
+            handleModifiedInput();
+            shuffleLetterBank();
+            handleRawInput();
+            modifiedInput.focus();
 
-
-          modifiedInput.value = '';
-          //currentAnagram = '';
-          handleModifiedInput();
-          shuffleLetterBank();
-          handleRawInput();
-          modifiedInput.focus();
-
-          setCookie(APP_KEY, savedEntries);
+            const sessionData = JSON.parse(document.cookie)[APP_KEY] || {};
+            if (sessionData[key]) {
+              sessionData[key].push(currentValue);
+            } else {
+              sessionData[key] = [currentValue];
+            }
+            setCookie(APP_KEY, sessionData);
         }
       }
     }
-
-    // todo: I don't know if I want these components here.
-    function createRow(title, data) {
-      const listID = title.replaceAll(/\s/g, '-');
-      const listElement = document.createElement('tr');
-      listElement.setAttribute('id', listID);
-
-      const rowHeaderElement = document.createElement('td');
-      rowHeaderElement.classList.add('row-header');
-      const headerText = document.createTextNode(title);
-      rowHeaderElement.appendChild(headerText);
-      rowHeaderElement.addEventListener('click', () => {
-        rawInput.value = title;
-        modifiedInput.value = '';
-        handleRawInput();
-        modifiedInput.focus();
-      });
-
-
-      listElement.appendChild(rowHeaderElement);
-      tableContent.appendChild(listElement);
-
-      if(Array.isArray(data)) {
-        data.forEach(term => createTableCell(term, listElement));
-      }
-    }
-
-    function createTableCell(term, rowElement) {
-      const newEntryTD = document.createElement('td');
-      const newEntryText = document.createTextNode(term);
-      newEntryTD.appendChild(newEntryText);
-      rowElement.appendChild(newEntryTD);
-    }
-
-    // set event listeners
-    rawInput.addEventListener('change', handleRawInput);
-    rawInput.addEventListener('beforeinput', () => {
-      const selectedText = window.getSelection().toString();
-      // if the whole raw input is replaced, assume user wants to clear anagram
-      if (selectedText === rawInput.value) {
-        letterBank.innerText = '';
-        modifiedInput.value = '';
-        currentAnagram = '';
-      }
-    });
 
     clearRawButton.addEventListener('click', () => {
       rawInput.value = '';
@@ -257,8 +243,17 @@ const Anagrammar = {
       const sessionData = JSON.parse(document.cookie)[APP_KEY];
       if (sessionData) {
         Object.entries(sessionData).forEach(([key, data]) => {
-          savedEntries[key] = data;
-          createRow(key, data);
+          // savedEntries[key] = data;
+          // savedEntries[key].id = key.replaceAll(/\s/g, '-');
+          // createList(key, data);
+          const listElement = Object.assign(document.createElement('stored-list'), {
+            title: key,
+            data: data
+          });
+          listElement.addEventListener('listHeaderClick', listHeaderClick);
+          listElement.addEventListener('itemDeleted', itemDeleted);
+          listElement.addEventListener('editItem', editItem);
+          document.getElementById('list-container').appendChild(listElement)
         })
       }
     }

@@ -1,0 +1,32 @@
+<style>
+    .item-text {
+        margin-right: 10px;
+    }
+
+    /* Initial style for buttons */
+    .list-item-button-container {
+        width: 45px;
+        display: inline-block;
+    }
+
+    .btn {
+        display: none; /* Hidden by default */
+    }
+
+    .btn:hover {
+        cursor: pointer;
+    }
+
+    /* Show buttons on hover or focus */
+    :host(:hover) .btn,
+    :host(:focus) .btn {
+        display: inline-block; /* Show buttons on hover or focus */
+    }
+</style>
+<div class="stored-list-item">
+    <span class="item-text"></span>
+    <div class="list-item-button-container">
+        <span class="edit-btn btn">🖉</span>
+        <span class="delete-btn btn">x</span>
+    </div>
+</div>

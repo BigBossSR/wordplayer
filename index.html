@@ -3,6 +3,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title></title>
     <style>
         @font-face {
@@ -29,6 +31,9 @@
             font-family: Chicago;
             margin: 6px;
         }
+        textarea {
+            max-width: 95%;
+        }
         .input-row {
             display: flex;
             flex-direction: row;
@@ -38,7 +43,15 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
+            max-width: 33%;
+        }
+        #letter-bank {
+            border: solid 2px black;
+            width: 100%;
+            text-align: center;
+            min-height: 23px;
+            word-wrap: break-word;
         }
         @media (max-width: 768px) {
             .input-row {
@@ -47,24 +60,35 @@
 
             .input-column {
                 width: 100%; /* Ensure columns fill the full width */
+                align-items: flex-start;
+                max-width: 100%;
+            }
+
+             #letter-bank-column {
+                order: -1; /* Move letter bank column to the top */
+                align-items: center; /* Center items along the cross axis */
+            }
+            #letter-bank-label {
+                display: none; /* Remove extra vertical space when stacked  */
             }
         }
         #letter-bank-column {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center items along the cross axis */
             justify-content: space-between; /* Distribute items evenly along the main axis */
         }
         #letter-bank-label {
             cursor: pointer;
         }
-        .row-header {
-            border: solid gray 1px;
-            cursor: pointer;
+        .stored-input-list {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 5px;
+            margin-bottom: 10px;
         }
-        td {
-            border-right: solid gray 1px;
-            padding: 4px;
+        
+        .list-header {
+            border-bottom: solid 1px black;
         }
     </style>
 </head>
@@ -88,6 +112,7 @@
             <button tabindex="0" id="store-modified-text-button">Store anagram</button>
         </div>
     </div>
+    <div id="list-container"></div>
     <table>
         <thead id="selection-table-header">
         </thead>
@@ -95,8 +120,6 @@
     </table>
 </body>
 </html>
-
-<script type="module" src="src/index.js">
-    
-
-</script>  
+  
+<script type="module" src="src/index.js"></script>
+<script type="module" src="src/common/web-components/index.js"></script>  
