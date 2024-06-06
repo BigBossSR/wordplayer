@@ -46,6 +46,7 @@ export class StoredList extends HTMLElement {
       	this.classList.add('stored-input-list');
 
       	const listHeader = document.createElement('div');
+      	listHeader.style.borderBottom = "solid 1px black";
       	listHeader.classList.add('list-header');
       	listHeader.textContent = this.title;
 
