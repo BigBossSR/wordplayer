@@ -1,5 +1,5 @@
-console.log('updated file 1')
-import { rawInput, modifiedInput, tableContent } from './elements.js'
+// todo: I think the goal here was to connect the generic elements with the specific view loaded
+import { rawInput, modifiedInput } from './elements.js'
 // todo: clean the element event listeners
 import Anagrammar from './anagrammar.js';
 // confirm

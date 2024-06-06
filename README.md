@@ -12,9 +12,10 @@ TODOS:
 * Factor out the repeated GET calls for template > and make it work for minified
 	 - ~~go back through and figure out what was working and what isn't now~~
 	 - ~~Probably: put templates file in root of src~~
-	 - include a templates section of index.html
-	 - load templates when mounting anagrammar
+	 - ~~include a templates section of index.html~~
+	 - ~~load templates when mounting anagrammar~~
 	 - clean 'templates' and append to
+	 - figure out a more dynamic way to create multiple templates on load - creating the template element at runtime, as that seems necessary.
 * HTML/CSS template for the stored list
 * Maybe pass a callback to stored-list so it can update the cookie whenever data changes
 * ~~cookies~~

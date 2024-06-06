@@ -1,4 +1,4 @@
-const template = document.createElement("template");
+import { templateContainer } from '../../elements.js';
 
 export class StoredInputItem extends HTMLElement {
     constructor() {
@@ -7,7 +7,11 @@ export class StoredInputItem extends HTMLElement {
         this.attachShadow({ mode: 'open' });
     }
 
-    init() {
+    connectedCallback() {
+        // creating a template on-demand seems the only way to do this, but maybe could offload to parent?
+        const template = document.createElement('template');
+        template.innerHTML = templateContainer.innerHTML;
+
     	this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         // Now that the template content is available, you can interact with it
@@ -22,21 +26,6 @@ export class StoredInputItem extends HTMLElement {
         this.shadowRoot.querySelector('.edit-btn').addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('edit', { detail: { anagram: text }, bubbles: true }));
         });
-    }
-
-    connectedCallback() {
-    	// todo: all these fired before the template loads
-    	if (template.innerHTML) {
-    		this.init();
-    	} else {
-        fetch('common/web-components/stored-list-item-template.html')
-            .then(response => response.text())
-            .then(html => {
-                template.innerHTML = html;
-                this.init();
-            })
-            .catch(error => console.error('Error fetching HTML:', error));
-        }
     }
 }
 

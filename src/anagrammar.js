@@ -1,4 +1,4 @@
-import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, tableContent, storeModifiedButton, clearRawButton } from './elements.js';
+import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer } from './elements.js';
 import { areTermsEqual, getAlphanumerics, setCookie, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
@@ -239,25 +239,29 @@ const Anagrammar = {
 
     letterBankButton.addEventListener('click', shuffleLetterBank);
 
-    if (document.cookie.length) {
-      const sessionData = JSON.parse(document.cookie)[APP_KEY];
-      if (sessionData) {
-        Object.entries(sessionData).forEach(([key, data]) => {
-          // savedEntries[key] = data;
-          // savedEntries[key].id = key.replaceAll(/\s/g, '-');
-          // createList(key, data);
-          const listElement = Object.assign(document.createElement('stored-list'), {
-            title: key,
-            data: data
-          });
-          listElement.addEventListener('listHeaderClick', listHeaderClick);
-          listElement.addEventListener('itemDeleted', itemDeleted);
-          listElement.addEventListener('editItem', editItem);
-          document.getElementById('list-container').appendChild(listElement)
-        })
-      }
-    }
-
+    // load templates, then populate saved data
+    fetch('common/web-components/stored-list-item-template.html')
+      .then(response => response.text())
+      .then(html => {
+          templateContainer.innerHTML = html;
+          if (document.cookie.length) {
+            const sessionData = JSON.parse(document.cookie)[APP_KEY];
+            if (sessionData) {
+              Object.entries(sessionData).forEach(([key, data]) => {
+                const listElement = Object.assign(document.createElement('stored-list'), {
+                  title: key,
+                  data: data
+                });
+                listElement.addEventListener('listHeaderClick', listHeaderClick);
+                listElement.addEventListener('itemDeleted', itemDeleted);
+                listElement.addEventListener('editItem', editItem);
+                document.getElementById('list-container').appendChild(listElement)
+              })
+            }
+          }
+      })
+      .catch(error => console.error('Error fetching HTML:', error));
+        
     // final setup: populate the demo anagram and manually trigger input handler 
     modifiedInput.value = demoValues.modified;
     handleModifiedInput();
