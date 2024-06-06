@@ -1,10 +1,20 @@
 TO RUN THE APP:
-`http-server`
-Navigate to localhost:8080
+- `npm run start`
+- Navigate to localhost:8080
+
+TO RUN THE PRODUCTION VERSION:
+- `npm run build`
+- `npm run start-prod`
+- Navigate to localhost:8080
 
 TODOS:
 * Extract the handlers and put them in the load saved part
-* Factor out the repeated GET calls for template
+* Factor out the repeated GET calls for template > and make it work for minified
+	 - ~~go back through and figure out what was working and what isn't now~~
+	 - ~~Probably: put templates file in root of src~~
+	 - include a templates section of index.html
+	 - load templates when mounting anagrammar
+	 - clean 'templates' and append to
 * HTML/CSS template for the stored list
 * Maybe pass a callback to stored-list so it can update the cookie whenever data changes
 * ~~cookies~~

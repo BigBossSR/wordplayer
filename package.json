@@ -5,5 +5,22 @@
   "main": "server.js",
   "author": {
     "name": ""
+  },
+  "scripts": {
+    "rollup": "rollup -c --bundleConfigAsCjs",
+    "terser": "terser dist/index.js -o dist/index.js && terser dist/common/web-components/index.js -o dist/common/web-components/index.js",
+    "copyfiles": "copyfiles -u 1 src/index.html dist && copyfiles -u 1 src/assets/* dist/ && copyfiles -u 1 src/common/web-components/*.html dist/",
+    "build": "npm run rollup && npm run terser && npm run copyfiles",
+    "start": "http-server src",
+    "start-prod": "http-server dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.6",
+    "@babel/core": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@rollup/plugin-babel": "^6.0.4",
+    "copyfiles": "^2.4.1",
+    "rollup": "^4.18.0",
+    "terser": "^5.31.0"
   }
 }

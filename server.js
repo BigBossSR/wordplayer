@@ -1,5 +1,5 @@
 //import home from '../index.html'
-'use strict';
+/*'use strict';
 var http = require('http');
 var fs = require('fs');
 
@@ -10,3 +10,4 @@ http.createServer(function (req, res) {
     //res.end('../index.html');
     fs.createReadStream('./index.html').pipe(res);
 }).listen(port);
+*/

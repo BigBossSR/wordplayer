@@ -29,12 +29,11 @@ export class StoredInputItem extends HTMLElement {
     	if (template.innerHTML) {
     		this.init();
     	} else {
-        fetch('src/common/web-components/stored-list-item-template.html')
+        fetch('common/web-components/stored-list-item-template.html')
             .then(response => response.text())
             .then(html => {
                 template.innerHTML = html;
                 this.init();
-             
             })
             .catch(error => console.error('Error fetching HTML:', error));
         }
