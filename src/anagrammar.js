@@ -227,6 +227,18 @@ const Anagrammar = {
       }
     }
 
+    // set event listeners
+    rawInput.addEventListener('change', handleRawInput);
+    rawInput.addEventListener('beforeinput', () => {
+      const selectedText = window.getSelection().toString();
+      // if the whole raw input is replaced, assume user wants to clear anagram
+      if (selectedText === rawInput.value) {
+        letterBank.innerText = '';
+        modifiedInput.value = '';
+        currentAnagram = '';
+      }
+    });
+
     clearRawButton.addEventListener('click', () => {
       rawInput.value = '';
       handleRawInput();
