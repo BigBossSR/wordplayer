@@ -8,8 +8,15 @@ TO RUN THE PRODUCTION VERSION:
 - Navigate to localhost:8080
 
 TODOS:
+* ~~Fix cookie on WordPress~~
+* Terser mangle?
+* starter terms
+	- shuffle random starter word
+	- create more lists and rotate on page load
+	- option to supply anagrams with start word or not
+	- option to load starter terms or not - could be a 'get me started' mode
 * Extract the handlers and put them in the load saved part
-* Factor out the repeated GET calls for template > and make it work for minified
+* ~~Factor out the repeated GET calls for template > and make it work for minified~~
 	 - ~~go back through and figure out what was working and what isn't now~~
 	 - ~~Probably: put templates file in root of src~~
 	 - ~~include a templates section of index.html~~

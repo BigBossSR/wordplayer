@@ -1,5 +1,5 @@
 import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer } from './elements.js';
-import { areTermsEqual, getAlphanumerics, setCookie, shuffleArray } from './util.js';
+import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray } from './util.js';
 
 const DEFAULT_INPUTS = [
   { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
@@ -80,13 +80,13 @@ const Anagrammar = {
 
     function itemDeleted({ detail }) {
       const { id, data } = detail;
-      const sessionData = JSON.parse(document.cookie)[APP_KEY] || {};
+      const sessionData = getCookieJSON(APP_KEY) || {};
       if (data.length) {
         sessionData[id] = data;
       } else {
         delete sessionData[id];
       }
-      setCookie(APP_KEY, sessionData);
+      setCookieJSON(APP_KEY, sessionData);
     }
 
     function editItem({detail}) {
@@ -183,7 +183,7 @@ const Anagrammar = {
      * White space is trimmed from beginning and end, but internal spaces and punctuation are considered unique.
     */
     function storeAnagram() {
-    if (letterBank.innerText.length === 0) {
+      if (letterBank.innerText.length === 0) {
         const key = rawInput.value.trim().toUpperCase();
         const currentValue = modifiedInput.value.trim();
 
@@ -216,13 +216,13 @@ const Anagrammar = {
             handleRawInput();
             modifiedInput.focus();
 
-            const sessionData = JSON.parse(document.cookie)[APP_KEY] || {};
+            const sessionData = getCookieJSON(APP_KEY) || {};
             if (sessionData[key]) {
               sessionData[key].push(currentValue);
             } else {
               sessionData[key] = [currentValue];
             }
-            setCookie(APP_KEY, sessionData);
+            setCookieJSON(APP_KEY, sessionData);
         }
       }
     }
@@ -243,22 +243,21 @@ const Anagrammar = {
     fetch('common/web-components/stored-list-item-template.html')
       .then(response => response.text())
       .then(html => {
-          templateContainer.innerHTML = html;
-          if (document.cookie.length) {
-            const sessionData = JSON.parse(document.cookie)[APP_KEY];
-            if (sessionData) {
-              Object.entries(sessionData).forEach(([key, data]) => {
-                const listElement = Object.assign(document.createElement('stored-list'), {
-                  title: key,
-                  data: data
-                });
-                listElement.addEventListener('listHeaderClick', listHeaderClick);
-                listElement.addEventListener('itemDeleted', itemDeleted);
-                listElement.addEventListener('editItem', editItem);
-                document.getElementById('list-container').appendChild(listElement)
-              })
-            }
+          templateContainer.innerHTML = html;  
+          const sessionData = getCookieJSON(APP_KEY);
+          if (sessionData) {
+            Object.entries(sessionData).forEach(([key, data]) => {
+              const listElement = Object.assign(document.createElement('stored-list'), {
+                title: key,
+                data: data
+              });
+              listElement.addEventListener('listHeaderClick', listHeaderClick);
+              listElement.addEventListener('itemDeleted', itemDeleted);
+              listElement.addEventListener('editItem', editItem);
+              document.getElementById('list-container').appendChild(listElement)
+            })
           }
+        
       })
       .catch(error => console.error('Error fetching HTML:', error));
         
