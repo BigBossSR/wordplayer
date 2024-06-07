@@ -64,12 +64,20 @@
                 max-width: 100%;
             }
 
-             #letter-bank-column {
-                order: -1; /* Move letter bank column to the top */
+            #letter-bank-column {
+                /*order: -1; /* Move letter bank column to the top */
+                margin-block-start: 1.33em;
                 align-items: center; /* Center items along the cross axis */
             }
             #letter-bank-label {
                 display: none; /* Remove extra vertical space when stacked  */
+            }
+        }
+        /*todo: */
+        @media (max-width: 374px) {
+            textarea.classic-input {
+                outline: none;
+                width: 100%;
             }
         }
         #letter-bank-column {
@@ -109,7 +117,7 @@
         <div class="input-column" id='letter-bank-column'>
             <h4 id="letter-bank-label"></h4>
             <span id="letter-bank"></span>
-            <button tabindex="0" id="letter-bank-button">Shuffle</button>
+            <button tabindex="0" id="letter-bank-button">Shuffle Unused Letters</button>
         </div>
         <div class="input-column">
             <h4 id="modified-text-label">Now anagram it!</h4>
