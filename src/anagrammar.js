@@ -66,9 +66,9 @@ const Anagrammar = {
     let currentAnagram = '';
 
     // default setup: example anagram input
-    const demoValues = DEFAULT_INPUTS[Math.floor(Math.random() * DEFAULT_INPUTS.length)];
+    /*const demoValues = DEFAULT_INPUTS[Math.floor(Math.random() * DEFAULT_INPUTS.length)];
     rawInput.value = demoValues.raw;
-    letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
+    letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();*/
 
     /** Event Handlers */
     function listHeaderClick({detail}) {
@@ -274,8 +274,8 @@ const Anagrammar = {
       .catch(error => console.error('Error fetching HTML:', error));
         
     // final setup: populate the demo anagram and manually trigger input handler 
-    modifiedInput.value = demoValues.modified;
-    handleModifiedInput();
+    /*modifiedInput.value = demoValues.modified;
+    handleModifiedInput();*/
     modifiedInput.focus();
   }
 };
