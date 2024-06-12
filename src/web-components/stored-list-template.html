@@ -1,9 +1,14 @@
 <style>
-    /*todo: this is just to verify loading so far*/
-	.stored-input-list {
+	:host(stored-list) {
         display: inline-block;
         vertical-align: top;
         margin-right: 5px;
         margin-bottom: 10px;
     }
+
+    .list-header {
+        border-bottom: solid 1px black;
+    }
 </style>
+<div class="list-header"></div>
+<div class="item-list"></div>

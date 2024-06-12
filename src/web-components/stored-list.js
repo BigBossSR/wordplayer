@@ -6,7 +6,6 @@ export class StoredList extends HTMLElement {
 	}
 
 	addListItem(term, addToData = true) {
-	    
 	    if (addToData) {
     	    // Add the new term to the internal data array
     	    this.data.push(term);
@@ -40,27 +39,20 @@ export class StoredList extends HTMLElement {
 	}
 
 	connectedCallback() {
+		const template = document.getElementById('stored-list-template');
+    	this.shadowRoot.appendChild(template.content.cloneNode(true));
+
 		const listID = this.title.replaceAll(/\s/g, '-');
       	
       	this.setAttribute('id', listID);
-      	this.classList.add('stored-input-list');
-
-      	const listHeader = document.createElement('div');
-      	listHeader.style.borderBottom = "solid 1px black";
-      	listHeader.classList.add('list-header');
+      	
+      	const listHeader = this.shadowRoot.querySelector('.list-header');
       	listHeader.textContent = this.title;
-
       	listHeader.addEventListener('click', () => {
         	this.dispatchEvent(new CustomEvent('listHeaderClick', { detail: { term: this.title }, bubbles: true }));
       	});
 
-      	this.shadowRoot.appendChild(listHeader);
-
-      	const itemList = document.createElement('div');
-      	itemList.classList.add('item-list');
-      	this.shadowRoot.appendChild(itemList);
-
-      	this.data.forEach(term => {
+        this.data.forEach(term => {
           	this.addListItem(term, false);
       	});
 
