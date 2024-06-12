@@ -93,29 +93,41 @@
             margin-block-start: 1.33em;
             margin-block-end: 1.33em;
         }
+
+        #footer-bar {
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            font-family: monospace;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h2>Wordplayer</h2>
-    <h4 id="current-gamer">Anagrammar</h4>
-    <div class="input-row">
-        <div class="input-column">
-            <h4 id="raw-text-label">Enter term to anagram...</h4>
-            <textarea id="raw-text-input"></textarea>
-            <button tabindex="0" id="clear-raw-text-button">Clear</button>
+    <div id='gamer-container'>    
+        <h4 id="current-gamer">Anagrammar</h4>
+        <div class="input-row">
+            <div class="input-column">
+                <h4 id="raw-text-label">Enter term to anagram...</h4>
+                <textarea id="raw-text-input"></textarea>
+                <button tabindex="0" id="clear-raw-text-button">Clear</button>
+            </div>
+            <div class="input-column" id='letter-bank-column'>
+                <h4 id="letter-bank-label"></h4>
+                <span id="letter-bank"></span>
+                <button tabindex="0" id="letter-bank-button">Shuffle Unused Letters</button>
+            </div>
+            <div class="input-column">
+                <h4 id="modified-text-label">Now anagram it!</h4>
+                <textarea id="modified-text-input"></textarea>
+                <button tabindex="0" id="store-modified-text-button">Store anagram</button>
+            </div>
         </div>
-        <div class="input-column" id='letter-bank-column'>
-            <h4 id="letter-bank-label"></h4>
-            <span id="letter-bank"></span>
-            <button tabindex="0" id="letter-bank-button">Shuffle Unused Letters</button>
-        </div>
-        <div class="input-column">
-            <h4 id="modified-text-label">Now anagram it!</h4>
-            <textarea id="modified-text-input"></textarea>
-            <button tabindex="0" id="store-modified-text-button">Store anagram</button>
-        </div>
+        <div id="list-container"></div>
     </div>
-    <div id="list-container"></div>
+    <footer id="footer-bar"><em>Developed by <span id="footer-credit">Scott A. M. Ross</span></em></footer>
 </body>
 </html>
   

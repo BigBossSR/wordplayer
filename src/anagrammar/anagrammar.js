@@ -1,5 +1,5 @@
-import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer } from '../common/elements.js';
-import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray } from '../common/util.js';
+import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
+import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray, randomFromArray } from '../common/util.js';
 
 const DEFAULT_INPUTS = [
   { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
@@ -26,6 +26,8 @@ const DEFAULT_INPUTS = [
   { raw: "Clint Eastwood", modified: "Old West Action" }
 ];
 
+const FOOTER_CREDITS = ["Casts Motors", "At Most Cross", "Coast Storms", "So Storm Cats", "Mrs. Taco Toss", "Tom's Co-Stars", "Cosmo's Tarts", "Mascot Sorts"];
+
 // const savedEntries = {};
 
 const APP_KEY = 'ANAGRAMMAR';
@@ -36,6 +38,20 @@ function applyStyles() {
   clearRawButton.classList.add('classic-input', 'classic-button');
   letterBankButton.classList.add('classic-input', 'classic-button');
   storeModifiedButton.classList.add('classic-input', 'classic-button');
+  // todo: probably doesn't go here, in final form
+  // occasionally display real or anagrammed name
+  if (Math.random() >= 0.75) {
+    footerCredit.innerText = randomFromArray(FOOTER_CREDITS);
+  }
+  footerCredit.addEventListener('click', ({ target }) => {
+    const current = target.innerText;
+    if (FOOTER_CREDITS.indexOf(current) > -1) {
+      target.innerText = "Scott A. M. Ross";
+    } else {
+      target.innerText = randomFromArray(FOOTER_CREDITS);
+    }
+  })
+
 }
 
 const Anagrammar = {

@@ -6,6 +6,10 @@ export const getAlphanumerics = str => {
   return str ? removeAccents(str).match(/[a-zA-Z]+/g).join('') : '';
 }
 
+export const randomFromArray = array => {
+  return array[(Math.floor(Math.random() * array.length))]
+}
+
 export const shuffleArray = array => {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

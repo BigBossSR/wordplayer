@@ -6,3 +6,4 @@ export const storeModifiedButton = document.getElementById('store-modified-text-
 export const clearRawButton = document.getElementById('clear-raw-text-button');
 export const listContainer = document.getElementById('list-container');
 export const templateContainer = document.getElementById('template-container');
+export const footerCredit = document.getElementById('footer-credit');
