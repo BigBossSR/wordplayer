@@ -20,8 +20,8 @@ ANAGRAMMAR REFACTORS
 * wrap the textarea and button in a div, so I can control alignment?
 * consider refactoring to classes with private methods since everything is just inside init right now
 * templates
-	 - clean 'templates' el and append to
-	 - figure out a more dynamic way to create multiple templates on load - creating the template element at runtime, as that seems necessary.
+	 - ~~clean 'templates' el and append to (Opting against cleaning now)~~
+	 - ~~figure out a more dynamic way to create multiple templates on load - creating the template element at runtime, as that seems necessary.~~
 	 - HTML/CSS template for the stored list
 
 ANAGRAMMAR FEATURES

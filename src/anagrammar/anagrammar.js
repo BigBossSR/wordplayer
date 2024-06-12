@@ -250,29 +250,21 @@ const Anagrammar = {
     storeModifiedButton.addEventListener('click', storeAnagram);
 
     letterBankButton.addEventListener('click', shuffleLetterBank);
-
-    // load templates, then populate saved data
-    fetch('web-components/stored-list-item-template.html')
-      .then(response => response.text())
-      .then(html => {
-          templateContainer.innerHTML = html;  
-          const sessionData = getCookieJSON(APP_KEY);
-          if (sessionData) {
-            Object.entries(sessionData).forEach(([key, data]) => {
-              const listElement = Object.assign(document.createElement('stored-list'), {
-                title: key,
-                data: data
-              });
-              listElement.addEventListener('listHeaderClick', listHeaderClick);
-              listElement.addEventListener('itemDeleted', itemDeleted);
-              listElement.addEventListener('editItem', editItem);
-              document.getElementById('list-container').appendChild(listElement)
-            })
-          }
-        
+     
+    const sessionData = getCookieJSON(APP_KEY);
+    if (sessionData) {
+      Object.entries(sessionData).forEach(([key, data]) => {
+        const listElement = Object.assign(document.createElement('stored-list'), {
+          title: key,
+          data: data
+        });
+        listElement.addEventListener('listHeaderClick', listHeaderClick);
+        listElement.addEventListener('itemDeleted', itemDeleted);
+        listElement.addEventListener('editItem', editItem);
+        document.getElementById('list-container').appendChild(listElement)
       })
-      .catch(error => console.error('Error fetching HTML:', error));
-        
+    }
+          
     // final setup: populate the demo anagram and manually trigger input handler 
     /*modifiedInput.value = demoValues.modified;
     handleModifiedInput();*/

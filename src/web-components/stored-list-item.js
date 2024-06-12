@@ -1,5 +1,3 @@
-import { templateContainer } from '../common/elements.js';
-
 export class StoredInputItem extends HTMLElement {
     constructor() {
         super();
@@ -8,10 +6,7 @@ export class StoredInputItem extends HTMLElement {
     }
 
     connectedCallback() {
-        // creating a template on-demand seems the only way to do this, but maybe could offload to parent?
-        const template = document.createElement('template');
-        template.innerHTML = templateContainer.innerHTML;
-
+        const template = document.getElementById('stored-list-item-template');
     	this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         // Now that the template content is available, you can interact with it
