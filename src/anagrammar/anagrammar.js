@@ -1,5 +1,5 @@
-import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer } from './elements.js';
-import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray } from './util.js';
+import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer } from '../common/elements.js';
+import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray } from '../common/util.js';
 
 const DEFAULT_INPUTS = [
   { raw: "Jim Morrison", modified: "Mr. Mojo Risin'"},
@@ -252,7 +252,7 @@ const Anagrammar = {
     letterBankButton.addEventListener('click', shuffleLetterBank);
 
     // load templates, then populate saved data
-    fetch('common/web-components/stored-list-item-template.html')
+    fetch('web-components/stored-list-item-template.html')
       .then(response => response.text())
       .then(html => {
           templateContainer.innerHTML = html;  

@@ -1,4 +1,4 @@
-import { templateContainer } from '../../elements.js';
+import { templateContainer } from '../common/elements.js';
 
 export class StoredInputItem extends HTMLElement {
     constructor() {
