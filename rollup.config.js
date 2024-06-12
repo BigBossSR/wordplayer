@@ -17,9 +17,9 @@ export default [
     ]
   },
   {
-    input: 'src/common/web-components/index.js',
+    input: 'src/web-components/index.js',
     output: {
-      file: 'dist/common/web-components/index.js',
+      file: 'dist/web-components/index.js',
       format: 'es',
       sourcemap: true
     },

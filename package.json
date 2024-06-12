@@ -8,8 +8,8 @@
   },
   "scripts": {
     "rollup": "rollup -c --bundleConfigAsCjs",
-    "terser": "terser dist/index.js -o dist/index.js && terser dist/common/web-components/index.js -o dist/common/web-components/index.js",
-    "copyfiles": "copyfiles -u 1 src/index.html dist && copyfiles -u 1 src/assets/* dist/ && copyfiles -u 1 src/common/web-components/*.html dist/",
+    "terser": "terser dist/index.js -o dist/index.js && terser dist/web-components/index.js -o dist/web-components/index.js",
+    "copyfiles": "copyfiles -u 1 src/index.html dist && copyfiles -u 1 src/assets/* dist/ && copyfiles -u 1 src/web-components/*.html dist/",
     "build": "npm run rollup && npm run terser && npm run copyfiles",
     "start": "http-server src",
     "start-prod": "http-server dist"
