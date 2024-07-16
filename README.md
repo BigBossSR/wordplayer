@@ -12,7 +12,7 @@ EXPANDING
 * Samples: 
 	- ~~convert letterbank to input~~
 	- ~~use placeholders with current example~~
-	- "use this example"
+	- ~~"use this example"~~
 * Set up homepage to load Anagrammar dynamically - and a universal wrapper with: developed by Scott AM Ross, changes to Mrs Taco Toss, to Scott AM Ross or Matt Ocs
 * ~~Mechanism to mount a new app for Palindromer~~
 * use regexp to find index checking only alphanumeric

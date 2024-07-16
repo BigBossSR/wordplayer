@@ -1,4 +1,4 @@
-import { rawInput, rawTextLabel, modifiedInput, modifiedInputLabel, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
+import { rawInput, rawTextLabel, modifiedInput, modifiedInputLabel, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, useExampleButton, templateContainer, footerCredit } from '../common/elements.js';
 import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray, randomFromArray } from '../common/util.js';
 
 const DEFAULT_INPUTS = [
@@ -35,6 +35,7 @@ const APP_KEY = 'ANAGRAMMAR';
 const anagrammerLabels = {
   anagrammar_rawText_label: "Enter term to anagram...",
   anagrammar_clearInput_button: "Clear",
+  anagrammar_useExample_button: "Use this example",
   anagrammar_letterBank_placeholder: "Available letters are shown here",
   anagrammar_letterBank_button: "Shuffle Unused Letters",
   anagrammar_input_placeholder: "Ex: {0}",
@@ -46,6 +47,7 @@ function applyStyles() {
   rawInput.classList.add('classic-input');
   modifiedInput.classList.add('classic-input');
   clearRawButton.classList.add('classic-input', 'classic-button');
+  useExampleButton.classList.add('classic-input', 'classic-button');
   letterBankButton.classList.add('classic-input', 'classic-button');
   storeModifiedButton.classList.add('classic-input', 'classic-button');
   // todo: probably doesn't go here, in final form
@@ -85,20 +87,22 @@ class Anagrammar {
     // determine a delete or addition
 
   },*/
+  #currentExample = '';
 
-  #getExample() {
-    return randomFromArray(DEFAULT_INPUTS);
+  #setExample() {
+    this.#currentExample = randomFromArray(DEFAULT_INPUTS);
   }
 
   #initializeDOM() {
-    const example = this.#getExample();
+    this.#setExample();
     rawTextLabel.innerText = anagrammerLabels.anagrammar_rawText_label;
-    rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.raw);
+    rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', this.#currentExample.raw);
     clearRawButton.innerText = anagrammerLabels.anagrammar_clearInput_button;
+    useExampleButton.innerText = anagrammerLabels.anagrammar_useExample_button;
     letterBank.placeholder = anagrammerLabels.anagrammar_letterBank_placeholder;
     letterBankButton.innerText = anagrammerLabels.anagrammar_letterBank_button;
     modifiedInputLabel.innerText = anagrammerLabels.anagrammar_modifiedText_label;
-    modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.modified);
+    modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', this.#currentExample.modified);
     storeModifiedButton.innerText = anagrammerLabels.anagrammar_modifiedText_button;
   }
 
@@ -153,13 +157,15 @@ class Anagrammar {
         clearRawButton.disabled = false;
         letterBankButton.disabled = false;
         storeModifiedButton.disabled = false;
+        useExampleButton.disabled = true;
       } else {
-        const example = self.#getExample();
-        rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.raw);
-        modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.modified);
+        self.#setExample();
+        rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', self.#currentExample.raw);
+        modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', self.#currentExample.modified);
         clearRawButton.disabled = true;
         letterBankButton.disabled = true;
         storeModifiedButton.disabled = true;
+        useExampleButton.disabled = false;
       }
       letterBank.value = getAlphanumerics(rawInput.value).toUpperCase();
       shuffleLetterBank();
@@ -301,6 +307,14 @@ class Anagrammar {
       rawInput.value = '';
       handleRawInput();
       rawInput.focus();
+    });
+
+    useExampleButton.addEventListener('click', () => {
+      rawInput.value = self.#currentExample.raw;
+      handleRawInput();
+      modifiedInput.value = self.#currentExample.modified;
+      handleModifiedInput();
+      modifiedInput.focus();
     });
 
     modifiedInput.addEventListener('input', handleModifiedInput);
