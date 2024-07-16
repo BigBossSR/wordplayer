@@ -15,6 +15,33 @@
             background-color: white;
             font-family: Chicago;
         }
+
+        #gamer-tabs {
+            border-bottom: 1px solid black;
+        }
+
+        #gamer-tabs div {
+            display: inline-block;
+            padding: 2px 6px;
+            margin-left: 2.5%;
+        }
+
+        #gamer-tabs div.active-tab {
+            outline: 1px solid white;
+            border-left: 1px solid black;
+            border-top: 1px solid black;
+            border-right: 1px solid black;
+            border-radius: 6px 6px 0 0;
+        }
+
+        #gamer-tabs div:not(.active-tab) {
+            cursor: pointer;
+        }
+
+        #gamer-tabs div:not('.active-tab'):hover {
+            text-decoration: underline;
+        }
+
         .classic-button {
             border-radius: 3px;
             background-color: white;
@@ -107,10 +134,10 @@
 <body>
     <h2>Wordplayer</h2>
     <div id='gamer-container'>    
-        <h4 id="current-gamer">Anagrammar</h4>
+        <h4 id="gamer-tabs"></h4>
         <div class="input-row">
             <div class="input-column">
-                <h4 id="raw-text-label">Enter term to anagram...</h4>
+                <h4 id="raw-text-label"></h4>
                 <textarea id="raw-text-input"></textarea>
                 <button tabindex="0" id="clear-raw-text-button">Clear</button>
             </div>

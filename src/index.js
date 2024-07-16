@@ -1,13 +1,35 @@
 // todo: I think the goal here was to connect the generic elements with the specific view loaded
 // import { rawInput, modifiedInput } from './common/elements.js'
 // todo: clean the element event listeners
-import { templateContainer } from './common/elements.js';
+import { tabs, templateContainer } from './common/elements.js';
 import Anagrammar from './anagrammar/anagrammar.js';
+import Palindromer from './palindromer/palindromer.js';
 import { loadWebComponentTemplates } from './web-components/index.js';
-// confirm
+
+let currentApp;
+
 const setView = (view) => {
-  view.init()
+  currentApp = new view();
+  currentApp.init()
 }
+
+[Anagrammar, Palindromer].forEach(app => {
+  const tabLink = document.createElement('div');
+  tabLink.innerText = app.name;
+  if (app.name === 'Anagrammar') {
+    tabLink.classList.add('active-tab');
+  }
+
+  tabLink.addEventListener('click', () => {
+    if (currentApp.name !== app.name) {
+        tabs.querySelector('.active-tab').classList.remove('active-tab');
+        tabLink.classList.add('active-tab');
+        setView(app);
+      }
+  });
+  tabs.appendChild(tabLink);
+})
+
 
 loadWebComponentTemplates(templateContainer)
   .then(() => {

@@ -1,4 +1,4 @@
-import { rawInput, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
+import { rawInput, rawTextLabel, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
 import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray, randomFromArray } from '../common/util.js';
 
 const DEFAULT_INPUTS = [
@@ -32,6 +32,10 @@ const FOOTER_CREDITS = ["Casts Motors", "At Most Cross", "Coast Storms", "So Sto
 
 const APP_KEY = 'ANAGRAMMAR';
 
+const anagrammerLabels = {
+  anagrammar_rawText_label: "Enter term to anagram..."
+};
+
 function applyStyles() {
   rawInput.classList.add('classic-input');
   modifiedInput.classList.add('classic-input');
@@ -54,7 +58,7 @@ function applyStyles() {
 
 }
 
-const Anagrammar = {
+class Anagrammar {
   // todo: in-progress refactor to simplify and implement class method
   /*handleModifiedInput: () => {
     let newValue = modifiedInput.value;
@@ -76,7 +80,12 @@ const Anagrammar = {
 
   },*/
 
-  init: () => {
+  #initializeDOM() {
+    rawTextLabel.innerText = anagrammerLabels.anagrammar_rawText_label;
+  }
+
+  init() {
+    this.#initializeDOM();
     applyStyles();
     // track the user-created value so we can reference it as needed 
     let currentAnagram = '';

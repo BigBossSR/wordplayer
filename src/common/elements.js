@@ -1,3 +1,5 @@
+export const tabs = document.getElementById('gamer-tabs');
+export const rawTextLabel = document.getElementById('raw-text-label');
 export const rawInput = document.getElementById('raw-text-input');
 export const letterBank = document.getElementById('letter-bank');
 export const modifiedInput = document.getElementById('modified-text-input');

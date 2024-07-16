@@ -9,8 +9,12 @@ TO RUN THE PRODUCTION VERSION:
 
 TODOS:
 EXPANDING
+* Samples: 
+	- convert letterbank to input
+	- use placeholders with current example
+	- "use this example"
 * Set up homepage to load Anagrammar dynamically - and a universal wrapper with: developed by Scott AM Ross, changes to Mrs Taco Toss, to Scott AM Ross or Matt Ocs
-* Mechanism to mount a new app for Palindromer
+* ~~Mechanism to mount a new app for Palindromer~~
 * use regexp to find index checking only alphanumeric
 * Probably want some routing/hashing which could also be cached. Then can have a homepage, but go back to your last or most common view
 
