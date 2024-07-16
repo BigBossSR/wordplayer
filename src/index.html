@@ -46,14 +46,19 @@
             border-radius: 3px;
             background-color: white;
         }
+        .classic-button:not([disabled]) {
+            cursor: pointer;
+        }
+
         .classic-button:focus {
             background-color: black;
             color: white;
             border-color: white;
+            outline-color: black;
         }
         .classic-input {
-            outline: 3px solid black;
-            border: 1px solid black;
+            outline: 3px solid; /*defaults to black, but allows disabled coloration*/
+            border: 1px solid;
             outline-offset: 2px;
             font-family: Chicago;
             margin: 6px;
@@ -79,6 +84,7 @@
             text-align: center;
             min-height: 23px;
             word-wrap: break-word;
+            font-family: Chicago;
         }
         @media (max-width: 768px) {
             .input-row {
@@ -139,17 +145,17 @@
             <div class="input-column">
                 <h4 id="raw-text-label"></h4>
                 <textarea id="raw-text-input"></textarea>
-                <button tabindex="0" id="clear-raw-text-button">Clear</button>
+                <button disabled id="clear-raw-text-button"></button>
             </div>
             <div class="input-column" id='letter-bank-column'>
                 <h4 id="letter-bank-label"></h4>
-                <span id="letter-bank"></span>
-                <button tabindex="0" id="letter-bank-button">Shuffle Unused Letters</button>
+                <input disabled id="letter-bank"></span>
+                <button disabled tabindex="0" id="letter-bank-button"></button>
             </div>
             <div class="input-column">
-                <h4 id="modified-text-label">Now anagram it!</h4>
+                <h4 id="modified-text-label"></h4>
                 <textarea id="modified-text-input"></textarea>
-                <button tabindex="0" id="store-modified-text-button">Store anagram</button>
+                <button disabled tabindex="0" id="store-modified-text-button"></button>
             </div>
         </div>
         <div id="list-container"></div>

@@ -1,4 +1,4 @@
-import { rawInput, rawTextLabel, modifiedInput, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
+import { rawInput, rawTextLabel, modifiedInput, modifiedInputLabel, letterBank, letterBankButton, listContainer, storeModifiedButton, clearRawButton, templateContainer, footerCredit } from '../common/elements.js';
 import { areTermsEqual, getAlphanumerics, setCookieJSON, getCookieJSON, shuffleArray, randomFromArray } from '../common/util.js';
 
 const DEFAULT_INPUTS = [
@@ -33,7 +33,13 @@ const FOOTER_CREDITS = ["Casts Motors", "At Most Cross", "Coast Storms", "So Sto
 const APP_KEY = 'ANAGRAMMAR';
 
 const anagrammerLabels = {
-  anagrammar_rawText_label: "Enter term to anagram..."
+  anagrammar_rawText_label: "Enter term to anagram...",
+  anagrammar_clearInput_button: "Clear",
+  anagrammar_letterBank_placeholder: "Available letters are shown here",
+  anagrammar_letterBank_button: "Shuffle Unused Letters",
+  anagrammar_input_placeholder: "Ex: {0}",
+  anagrammar_modifiedText_label: "Now anagram it!",
+  anagrammar_modifiedText_button: "Store anagram"
 };
 
 function applyStyles() {
@@ -80,11 +86,25 @@ class Anagrammar {
 
   },*/
 
+  #getExample() {
+    return randomFromArray(DEFAULT_INPUTS);
+  }
+
   #initializeDOM() {
+    const example = this.#getExample();
     rawTextLabel.innerText = anagrammerLabels.anagrammar_rawText_label;
+    rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.raw);
+    clearRawButton.innerText = anagrammerLabels.anagrammar_clearInput_button;
+    letterBank.placeholder = anagrammerLabels.anagrammar_letterBank_placeholder;
+    letterBankButton.innerText = anagrammerLabels.anagrammar_letterBank_button;
+    modifiedInputLabel.innerText = anagrammerLabels.anagrammar_modifiedText_label;
+    modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.modified);
+    storeModifiedButton.innerText = anagrammerLabels.anagrammar_modifiedText_button;
   }
 
   init() {
+    // TEMP: backward compatible until class refactor finished
+    const self = this;
     this.#initializeDOM();
     applyStyles();
     // track the user-created value so we can reference it as needed 
@@ -128,7 +148,20 @@ class Anagrammar {
      * This clears the currentAnagram and triggers handleModifiedInput to respond to changed values.
     */
     function handleRawInput() {
-      letterBank.innerText = getAlphanumerics(rawInput.value).toUpperCase();
+      if (rawInput.value.length) {
+        modifiedInput.placeholder = '';
+        clearRawButton.disabled = false;
+        letterBankButton.disabled = false;
+        storeModifiedButton.disabled = false;
+      } else {
+        const example = self.#getExample();
+        rawInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.raw);
+        modifiedInput.placeholder = anagrammerLabels.anagrammar_input_placeholder.replace('{0}', example.modified);
+        clearRawButton.disabled = true;
+        letterBankButton.disabled = true;
+        storeModifiedButton.disabled = true;
+      }
+      letterBank.value = getAlphanumerics(rawInput.value).toUpperCase();
       shuffleLetterBank();
       currentAnagram = '';
       // handleModifiedInput is smart enough to refresh the anagram from zero to reflect the new source input
@@ -143,7 +176,7 @@ class Anagrammar {
     */
     function handleModifiedInput(/*evt*/) {
       let newValue = modifiedInput.value.split('');
-      let unusedLetters = letterBank.innerText.split('');
+      let unusedLetters = letterBank.value.split('');
       let oldValue = currentAnagram.toUpperCase().split('');
 
       let charactersAdded = [];
@@ -184,7 +217,7 @@ class Anagrammar {
           }
         });
 
-        letterBank.innerText = unusedLetters.join('');
+        letterBank.value = unusedLetters.join('');
         modifiedInput.value = currentAnagram = newValue.join('');
       } else {
         // if no available characters, replace the latest input with the stored anagram
@@ -196,11 +229,11 @@ class Anagrammar {
      * Randomly rearrange letterBank on demand
     */
     function shuffleLetterBank() {
-      let letterArray = letterBank.innerText.split('');
+      let letterArray = letterBank.value.split('');
       
       shuffleArray(letterArray);
 
-      letterBank.innerText = letterArray.join('');
+      letterBank.value = letterArray.join('');
     }
 
     /**
@@ -208,7 +241,7 @@ class Anagrammar {
      * White space is trimmed from beginning and end, but internal spaces and punctuation are considered unique.
     */
     function storeAnagram() {
-      if (letterBank.innerText.length === 0) {
+      if (letterBank.value.length === 0) {
         const key = rawInput.value.trim().toUpperCase();
         const currentValue = modifiedInput.value.trim();
 
@@ -258,7 +291,7 @@ class Anagrammar {
       const selectedText = window.getSelection().toString();
       // if the whole raw input is replaced, assume user wants to clear anagram
       if (selectedText === rawInput.value) {
-        letterBank.innerText = '';
+        letterBank.value = '';
         modifiedInput.value = '';
         currentAnagram = '';
       }
@@ -290,10 +323,10 @@ class Anagrammar {
       })
     }
           
-    // final setup: populate the demo anagram and manually trigger input handler 
+    // FORMER final setup: populate the demo anagram and manually trigger input handler 
     /*modifiedInput.value = demoValues.modified;
     handleModifiedInput();*/
-    modifiedInput.focus();
+    rawInput.focus();
   }
 };
 

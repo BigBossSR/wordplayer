@@ -2,6 +2,7 @@ export const tabs = document.getElementById('gamer-tabs');
 export const rawTextLabel = document.getElementById('raw-text-label');
 export const rawInput = document.getElementById('raw-text-input');
 export const letterBank = document.getElementById('letter-bank');
+export const modifiedInputLabel = document.getElementById('modified-text-label');
 export const modifiedInput = document.getElementById('modified-text-input');
 export const letterBankButton = document.getElementById('letter-bank-button');
 export const storeModifiedButton = document.getElementById('store-modified-text-button');
