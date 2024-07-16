@@ -20,13 +20,18 @@
             border-bottom: 1px solid black;
         }
 
-        #gamer-tabs div {
+        #gamer-tabs button {
             display: inline-block;
+            font-family: 'CHICAGO';
+            font-weight: bold;
+            font-size: medium;
+            border: none;
+            background: white;
             padding: 2px 6px;
             margin-left: 2.5%;
         }
 
-        #gamer-tabs div.active-tab {
+        #gamer-tabs button.active-tab {
             outline: 1px solid white;
             border-left: 1px solid black;
             border-top: 1px solid black;
@@ -34,11 +39,11 @@
             border-radius: 6px 6px 0 0;
         }
 
-        #gamer-tabs div:not(.active-tab) {
+        #gamer-tabs button:not(.active-tab) {
             cursor: pointer;
         }
 
-        #gamer-tabs div:not('.active-tab'):hover {
+        #gamer-tabs button:not('.active-tab'):hover {
             text-decoration: underline;
         }
 

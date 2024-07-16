@@ -14,10 +14,14 @@ const setView = (view) => {
 }
 
 [Anagrammar, Palindromer].forEach(app => {
-  const tabLink = document.createElement('div');
+  const tabLink = document.createElement('button');
   tabLink.innerText = app.name;
   if (app.name === 'Anagrammar') {
     tabLink.classList.add('active-tab');
+  } else {
+    // only anagrammar is currently supported
+    tabLink.disabled = true;
+    tabLink.title = "Coming soon!";
   }
 
   tabLink.addEventListener('click', () => {
